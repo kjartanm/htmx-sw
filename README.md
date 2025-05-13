@@ -6,6 +6,8 @@ This is meant as a proof of concept how HTMX and web platform can be used to cre
 
 The app is based on the example used in the book Hypermedia Systems (https://hypermedia.systems/) (recommended).
 
+Demo is available here: https://htmx-sw.krmuller.workers.dev/
+
 
 ## Overview
 
