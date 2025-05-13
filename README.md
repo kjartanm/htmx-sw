@@ -65,8 +65,9 @@ The application is structured to be deployed on Cloudflare Workers, but can be a
 There are no build-steps, only js-modules and import-statements, all dependencies traversable from index.html.
 
 ## Deployment
+Any static site.
 
-The application is deployed using [Wrangler](https://developers.cloudflare.com/workers/wrangler/), Cloudflare's command-line tool for Workers:
+For example can the application be deployed using [Wrangler](https://developers.cloudflare.com/workers/wrangler/), Cloudflare's command-line tool for Workers:
 
 ```bash
 wrangler deploy
