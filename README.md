@@ -2,7 +2,7 @@
 
 A progressive web application (PWA) for managing contacts that demonstrates using HTMX with a service worker for offline capabilities and client-side SQLite storage.
 
-This is meant as a proof of concept how HTMX and web platform can be used to create things with little overhead and complexity.
+This is meant as a proof of concept how HTMX and web platform can be used to create things with little overhead and complexity. And that it is possible to create something SPA-ish without compromising on web and hypermedia.
 
 The app is based on the example used in the book Hypermedia Systems (https://hypermedia.systems/) (recommended).
 
@@ -59,6 +59,8 @@ The application is structured to be deployed on Cloudflare Workers, but can be a
 ### Getting Started
 
 1. Clone the repository
+
+There are no build-steps, only js-modules and import-statements, all dependencies traversable from index.html.
 
 ## Deployment
 
