@@ -1,4 +1,4 @@
-import {getDBFromOPFS, saveDBToOPFS} from '/assets/db/initSqlite.js'
+import {getDBFromOPFS, saveDBToOPFS} from './initSqlite.js'
 
 class ContactDatabase {
     constructor(dbPath) {

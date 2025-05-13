@@ -1,4 +1,4 @@
-import {initSqlJs} from '/assets/db/sql-wasm.js'
+import {initSqlJs} from './sql-wasm.js'
 
 export const getDBFromOPFS = async (fileName) => {
     const SQL = await initSqlJs({

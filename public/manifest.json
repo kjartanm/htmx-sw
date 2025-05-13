@@ -1,7 +1,7 @@
 {
   "name": "Contact App",
   "short_name": "Contact App",
-  "start_url": "http://127.0.0.1:8080/",
+  "start_url": "https://htmx-sw.krmuller.workers.dev/",
   "scope": "/",
   "display": "standalone",
   "description": "An app that allows you to manage your contacts",

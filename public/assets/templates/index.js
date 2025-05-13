@@ -1,4 +1,4 @@
-import { html } from 'https://cdn.jsdelivr.net/npm/uhtml-ssr@0.9.1/+esm'
+import { html } from '../uhtml-ssr-0.9.1/es.js'
 
 export const layout = (content,) => html`<!DOCTYPE html>
 <html lang="en">
@@ -9,8 +9,7 @@ export const layout = (content,) => html`<!DOCTYPE html>
     <title>My Contacts</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
-    <script defer src="/assets/htmx.org@1.9.12/dist/htmx.min.js"></script>
+    <script defer src="/assets/htmx.org-1.9.12/dist/htmx.min.js"></script>
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" href="/icons/contact-logo.svg" type="image/svg+xml">
     <script>
@@ -25,29 +24,33 @@ export const layout = (content,) => html`<!DOCTYPE html>
         window.matchMedia('(prefers-color-scheme: dark)').addListener(checkDarkMode);
     </script>
 </head>
-<body onload="checkDarkMode()" class="min-h-screen fixed flex flex-col justify-between h-full w-full md:max-w-4xl mx-auto">
+<body onload="checkDarkMode()" class="fixed flex flex-col justify-between h-dvh w-full md:max-w-4xl mx-auto">
     <header class="navbar z-10 p-4 bg-base-300 flex-none">
         <img src="/icons/contact-logo.svg" alt="Logo" class="w-8 h-8 flex-none" />
         <h2 class="text-2xl font-bold text-center inline-block flex-grow">My Contacts</h2>
         <details id="menu" class="dropdown dropdown-left flex-none">
-            <summary class="btn btn-ghost btn-circle">
-                <img src="/icons/menu.svg" alt="Menu" class="w-8 h-8" id="menu-toggle" />
+            <summary class="btn btn-ghost btn-circle  link light:link-neutral">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="6" r="2" />
+                    <circle cx="12" cy="12" r="2" />
+                    <circle cx="12" cy="18" r="2" />
+                </svg>
             </summary>
             <ul onclick="document.querySelector('#menu').open = false" class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                 <li>
-                    <a class="align-middle link link-neutral" hx-boost="true" hx-target="main" href="/new">
+                    <a class="align-middle link light:link-neutral " hx-boost="true" hx-target="main" href="/new">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h6" fill="none" viewBox="0 0 24 24" focusable="false" role="img"><path fill="currentColor" fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12M12 6.75a.75.75 0 0 1 .75.75v3.75h3.75a.75.75 0 0 1 0 1.5h-3.75v3.75a.75.75 0 0 1-1.5 0v-3.75H7.5a.75.75 0 0 1 0-1.5h3.75V7.5a.75.75 0 0 1 .75-.75" clip-rule="evenodd"></path></svg>
                         New Contact
                     </a>
                 </li>
                 <li>
-                    <a class="align-middle link link-neutral" hx-boost="true" hx-target="main" href="/archive">
+                    <a class="align-middle link light:link-neutral" hx-boost="true" hx-target="main" href="/archive">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h6" fill="none" viewBox="0 0 24 24" focusable="false" role="img"><path fill="currentColor" fill-rule="evenodd" d="M4 3.25a.75.75 0 0 0-.75.75v3.5c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V4a.75.75 0 0 0-.75-.75zm15.5 6a.25.25 0 0 1 .25.25V19A1.75 1.75 0 0 1 18 20.75H6A1.75 1.75 0 0 1 4.25 19V9.5a.25.25 0 0 1 .25-.25zm-4.75 3.25a.75.75 0 0 1-.75.75h-4a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 .75.75" clip-rule="evenodd"></path></svg>
                         Archive
                     </a>
                 </li>
                 <li>
-                    <a class="align-middle link link-neutral" href="/download">
+                    <a class="align-middle link light:link-neutral" href="/download">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h6" fill="none" viewBox="0 0 24 24" focusable="false" role="img"><path fill="currentColor" fill-rule="evenodd" d="M11 2.25A5.75 5.75 0 0 0 5.25 8c0 .052-.017.1-.074.157a.66.66 0 0 1-.325.158A3.25 3.25 0 0 0 5.5 14.75h4a.25.25 0 0 0 .25-.25V11a2.25 2.25 0 0 1 4.5 0v3.5c0 .138.112.25.25.25h2.75a4.5 4.5 0 1 0 0-9h-.745c-.09 0-.236-.066-.33-.26A5.746 5.746 0 0 0 11 2.25m1 8a.75.75 0 0 1 .75.75v7.69l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.22 2.22V11a.75.75 0 0 1 .75-.75" clip-rule="evenodd"></path></svg>
                         Download SQLite-file
                     </a>

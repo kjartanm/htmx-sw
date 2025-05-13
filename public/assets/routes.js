@@ -1,5 +1,5 @@
-import { AutoRouter, withContent } from '/assets/itty-router@5.0.18/index.js'
-import { layout, search, contactTable, contactRows, contactForm, contactView, updateForm } from '/assets/templates/index.js'
+import { AutoRouter, withContent } from './itty-router-5.0.18/index.js'
+import { layout, search, contactTable, contactRows, contactForm, contactView, updateForm } from './templates/index.js'
 import { cacheFirst } from './caching.js'
 
 const contactsMock = [
@@ -37,15 +37,14 @@ const getRoot = async (query, headers, db, render, html, redirect = false) => {
 
 const router = AutoRouter({})
 router
-    .all('/npm/*', cacheFirst)
     .all('/assets/*', cacheFirst)
+    .all('/npm/*', cacheFirst)
     .post('/mock', async ({ query, headers, }, { db, html, render, }, event) => {
         db.batchInsertContacts(contactsMock)
         return getRoot(query, headers, db, render, html, true)
     })
-    .get('/manifest.json', async (request) => {
-        return fetch(request.clone())
-    })
+    .get('/manifest.json', cacheFirst)
+    .get('/icons/*', cacheFirst)
     .get('/download', async ({ }, { db }) => {
         const blob = await db.getDBAsBlob()
         console.log('download', blob)
@@ -119,7 +118,7 @@ router
         }
         return getRoot(query, headers, db, render, html, true)
     })
-     .post('/:id/archive', async ({ params, query, headers }, { db, render, html, }, event) => {
+    .post('/:id/archive', async ({ params, query, headers }, { db, render, html, }, event) => {
         db.archiveContact(params.id,)
         return getRoot(query, headers, db, render, html, true)
     })
@@ -128,8 +127,7 @@ router
         return getRoot(query, headers, db, render, html, true)
     })
     .all('*', async (request) => {
-        console.log('all', request.url)
         return fetch(request.clone())
     })
 
-export default router
+export default router 
