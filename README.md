@@ -2,7 +2,7 @@
 
 A progressive web application (PWA) for managing contacts that demonstrates using HTMX with a service worker for offline capabilities and client-side SQLite storage.
 
-This is meant as a proof of concept how htmx and web platform can be used to create things with little overhead and complexity.
+This is meant as a proof of concept how HTMX and web platform can be used to create things with little overhead and complexity.
 
 The app is based on the example used in the book Hypermedia Systems (https://hypermedia.systems/) (recommended).
 
