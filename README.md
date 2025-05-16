@@ -2,13 +2,13 @@
 
 A progressive web application (PWA) for managing contacts that demonstrates using HTMX with a service worker for offline capabilities and client-side SQLite storage.
 
-This is meant as a *proof of concept* of how HTMX and web platform can be used to create things with little overhead and complexity. And that it is possible to create something SPA-ish without compromising on web and hypermedia. But since it is a *poc*, it is missing the usual checks and redundancies that make a proper robust application.
+This is meant as a *proof of concept* of how HTMX and web platform can be used to create things with little overhead and complexity. And, that it is possible to create something SPA-ish without compromising on web and hypermedia. But, since it is a *poc*, it is missing the usual checks and redundancies that make a proper robust application.
 
 The app is based on the example used in the book Hypermedia Systems (https://hypermedia.systems/) (recommended). See also https://github.com/bigskysoftware/contact-app for the original app.
 
 Demo is available here: https://htmx-sw.krmuller.workers.dev/
 
-On the page for adding new contacts (available from the kebab menu upper right corner), there is this button to fill the app with mock-data if you just want to have a quick look.
+On the page for adding new contacts (available from the kebab menu upper right corner), there is this button to fill the app with mock-data, if you just want to have a quick look.
 
 
 ## Overview
@@ -40,7 +40,7 @@ The application uses a minimal architecture (total download 1,1 Mb, including SQ
 - **HTMX**: Handles UI updates by making partial page requests
 - **Server-rendered HTML**: Uses uHTML for templating and server-side rendering
 
-OPFS (origin private file system - https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) is very interesting, but a bit tricky since implementation differs between browsers. Orginally I handled everything within the Service Worker, but Safari only allows writing to a file within a Web Worker, and that's why there is this some messaging back and forth involved. It would help if the different Worker environments was treated as equivalent in such matters.
+OPFS (origin private file system - https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) is very interesting, but a bit tricky since implementation differs between browsers. Orginally, I handled everything within the Service Worker, but Safari only allows writing to a file within a Web Worker. So that's why there are some messaging back and forth involved. It would help if the different Worker environments was treated as equivalent in such matters.
 
 ## Technical Stack
 
