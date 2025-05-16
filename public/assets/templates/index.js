@@ -13,6 +13,31 @@ export const layout = (content,) => html`<!DOCTYPE html>
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" href="/icons/contact-logo.svg" type="image/svg+xml">
     <script>
+        const fileWorker = new Worker('worker.js', {
+            type: 'classic',
+        })
+        
+        fileWorker.onmessage = (event) => {
+            //If the worker sends an error message, show an alert
+            if(event.data.type === 'error') {
+                alert('Error: ' + event.data.msg)
+            } else {
+                console.log('Message from worker: ' + event.data)
+            }
+        }
+
+        navigator.serviceWorker.addEventListener("message", (event) => {
+            //relaying messages from the service worker to the file worker
+            fileWorker.postMessage(event.data)
+        })
+        
+        const forceSave = () => {
+            //Hidden force save function to trigger the service worker to save the database from the UI
+            navigator.serviceWorker.controller.postMessage({
+                type: 'force-update',
+            })
+        }
+
         const checkDarkMode = () => {
             const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (darkMode) {
@@ -26,7 +51,7 @@ export const layout = (content,) => html`<!DOCTYPE html>
 </head>
 <body onload="checkDarkMode()" class="fixed flex flex-col justify-between h-dvh w-full md:max-w-4xl mx-auto">
     <header class="navbar z-10 p-4 bg-base-300 flex-none">
-        <img src="/icons/contact-logo.svg" alt="Logo" class="w-8 h-8 flex-none" />
+        <img onclick="forceSave()" src="/icons/contact-logo.svg" alt="Logo" class="w-8 h-8 flex-none" />
         <h2 class="text-2xl font-bold text-center inline-block flex-grow">My Contacts</h2>
         <details id="menu" class="dropdown dropdown-left flex-none">
             <summary class="btn btn-ghost btn-circle  link light:link-neutral">

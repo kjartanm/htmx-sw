@@ -1,9 +1,11 @@
 import {getDBFromOPFS, saveDBToOPFS} from './initSqlite.js'
 
 class ContactDatabase {
-    constructor(dbPath) {
+
+    constructor(dbPath, onsave) {
         this.dbPath = dbPath
         this.db = null
+        this.onsave = onsave
     }
 
     #serializeResult(dbresult){
@@ -20,18 +22,32 @@ class ContactDatabase {
         return result
     }
 
-    async init() {
+    async save(){
+        let success = true  
+        /*try {
+            success = await saveDBToOPFS(this.db, this.dbPath)
+        } catch (err) {
+            success = false
+            console.error('Error while saving database:', err.message)
+        }*/
+        try  {
+            if (this.onsave) {
+                const data = this.db.export()
+                this.onsave(this.dbPath, data)         
+            }
+        } catch (err) {
+            success = false
+        }
+        return success
+    }
 
+    async init() {
         try {
             this.db = await getDBFromOPFS(this.dbPath)
-            this.db.updateHook(async (operation, database, table, rowId) => {
-                await saveDBToOPFS(this.db, this.dbPath)
-            })
         } catch (err) {
             console.error('Error opening database:', err.message)
             return
         }
-
         const tableExists = this.db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='contacts';");
         if (!tableExists[0]) {
             const createTableQuery = `
@@ -45,9 +61,8 @@ class ContactDatabase {
                 )
             `
             this.db.run(createTableQuery)
-            await saveDBToOPFS(this.db, this.dbPath)
+            await this.save()
         }
-
     }
 
     validateContact (name, email, phone) {
@@ -72,7 +87,7 @@ class ContactDatabase {
         return {errorMsg, status};
     }
 
-    batchInsertContacts(contacts) {
+    async batchInsertContacts(contacts) {
         const insertQuery = `INSERT INTO contacts (name, email, phone, status, errorMsg) VALUES (?, ?, ?, ?, ?)`    
         const insertStmt = this.db.prepare(insertQuery)
         const results = [] 
@@ -81,30 +96,30 @@ class ContactDatabase {
             try {
                 insertStmt.run([contact.name, contact.email, contact.phone, status, errorMsg])  
             } catch (err) {
-                console.error('Error inserting contact:', err.message)  
                 status = 'error'
                 errorMsg = err.message
             }
             results.push({name: contact.name, email: contact.email, phone: contact.phone, status, errorMsg})
         }
         insertStmt.free()
+        await this.save()
         return results
     }
 
-    addContact(name, email, phone) {
+    async addContact(name, email, phone) {
         let {errorMsg, status} = this.validateContact(name, email, phone);
         const insertQuery = `INSERT INTO contacts (name, email, phone, status, errorMsg) VALUES (?, ?, ?, ?, ?)`
         try{
             this.db.exec(insertQuery, [name, email, phone, status, errorMsg])
         } catch (err) {
-            console.error('Error inserting contact:', err.message)
             status = 'error'
             errorMsg = err.message
         }
+        await this.save()
         return { name, email, phone, status, errorMsg }
     }
 
-    getContacts(query) {
+    async getContacts(query) {
         if (query) {
             const selectQuery = `SELECT * FROM contacts WHERE name LIKE ? OR email LIKE ? AND status != 'archived'`
             const results = this.db.exec(selectQuery, ['%' + query + '%', '%' + query + '%'])
@@ -115,13 +130,13 @@ class ContactDatabase {
         return this.#serializeResult(results)
     }
 
-    getContact(id) {
+    async getContact(id) {
         const selectQuery = `SELECT * FROM contacts WHERE id = ?`
         const results = this.db.exec(selectQuery, [id])
         return this.#serializeResult(results)
     }
 
-    updateContact(id, name, email, phone) {
+    async updateContact(id, name, email, phone) {
         let {errorMsg, status} = this.validateContact(name, email, phone);
         const updateQuery = `
             UPDATE contacts
@@ -131,55 +146,56 @@ class ContactDatabase {
         try {
             this.db.exec(updateQuery, [name, email, phone, status, errorMsg, id])
         } catch (err) {
-            console.error('Error updating contact:', err.message)
             status = 'error'
             errorMsg = err.message
         }
+        await this.save()
         return {id, name, email, phone, status, errorMsg}
     }
 
-    archiveContact(id) {
+    async archiveContact(id) {
         const updateStatusQuery = `
             UPDATE contacts
             SET status = 'archived'
             WHERE id = ?
         `
         this.db.exec(updateStatusQuery, [id])
+        await this.save()
     }
 
-    deArchiveContact(id) {
+    async deArchiveContact(id) {
         const updateStatusQuery = `
             UPDATE contacts
             SET status = 'ok'
             WHERE id = ?
         `
         this.db.exec(updateStatusQuery, [id])
+        await this.save()
     }
 
-    getArchive() {
+    async getArchive() {
         const selectQuery = `SELECT * FROM contacts WHERE status = 'archived'`
         const results = this.db.exec(selectQuery)
         return this.#serializeResult(results)
     }
 
-    deleteContact(id) {
+    async deleteContact(id) {
         const deleteQuery = `DELETE FROM contacts WHERE id = ?`
         try {
             this.db.exec(deleteQuery, [id])
         } catch (err) {
-            console.error('Error deleting contact:', err.message)
             return {status: 'error', message: err.message}
         }
+        await this.save()
         return {status: 'ok'}
     }
 
-    getDBAsBlob() {
+    async getDBAsArrayBuffer() {
         const data = this.db.export()
-        console.log('getDBAsBlob', data)
         return data
     }
 
-    close() {
+    async close() {
         this.db.close()
     }
 }

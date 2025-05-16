@@ -1,5 +1,7 @@
+import { cacheName } from "../version.js"
+
 const putInCache = async (request, response) => {
-  const cache = await caches.open("v2");
+  const cache = await caches.open(cacheName);
   await cache.put(request, response);
 }
 

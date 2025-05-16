@@ -12,10 +12,16 @@ export const getDBFromOPFS = async (fileName) => {
 }
 
 export const saveDBToOPFS = async (db, fileName) => {
-    const opfsHandle = await navigator.storage.getDirectory()
-    const fileHandle = await opfsHandle.getFileHandle(fileName, { create: true })
-    const writable = await fileHandle.createWritable()
-    const data = db.export()
-    await writable.write(data)
-    await writable.close()
+    let success = true
+    try {
+        const opfsHandle = await navigator.storage.getDirectory()
+        const fileHandle = await opfsHandle.getFileHandle(fileName, { create: true })
+        const writable = await fileHandle.createWritable()
+        const data = db.export()
+        await writable.write(data)
+        await writable.close()
+    } catch (err) {
+        success = false
+    }
+    return success
 }

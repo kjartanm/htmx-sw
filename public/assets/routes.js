@@ -2,6 +2,8 @@ import { AutoRouter, withContent } from './itty-router-5.0.18/index.js'
 import { layout, search, contactTable, contactRows, contactForm, contactView, updateForm } from './templates/index.js'
 import { cacheFirst } from './caching.js'
 
+
+
 const contactsMock = [
     { id: 1, name: 'John Doe', phone: '123-456-7890', email: 'john.doe@acme.com' },
     { id: 2, name: 'Jane Smith', phone: '987-654-3210', email: 'janes@gmail.com' },
@@ -39,14 +41,21 @@ const router = AutoRouter({})
 router
     .all('/assets/*', cacheFirst)
     .all('/npm/*', cacheFirst)
-    .post('/mock', async ({ query, headers, }, { db, html, render, }, event) => {
-        db.batchInsertContacts(contactsMock)
-        return getRoot(query, headers, db, render, html, true)
+    .all('/version.js', async (request) => {
+        console.log('version.js', request)
+        return fetch(request.clone())
+    })
+    .all('/worker.js', async (request) => {
+        return fetch(request.clone())
     })
     .get('/manifest.json', cacheFirst)
     .get('/icons/*', cacheFirst)
+    .post('/mock', async ({ query, headers, }, { db, html, render, }, event) => {
+        await db.batchInsertContacts(contactsMock)
+        return getRoot(query, headers, db, render, html, true)
+    })
     .get('/download', async ({ }, { db }) => {
-        const blob = await db.getDBAsBlob()
+        const blob = await db.getDBAsArrayBuffer()
         console.log('download', blob)
         return new Response(blob, {
             status: 200,
@@ -74,7 +83,7 @@ router
     })
     .post('/new', async ({ formData, query, headers, }, { db, html, render, }, event) => {
         const form = await formData()
-        const addedContact = db.addContact(form.get('name'), form.get('email'), form.get('phone'))
+        const addedContact = await db.addContact(form.get('name'), form.get('email'), form.get('phone'))
         if (addedContact.status === 'error') {
             return new Response(render(String, layout(contactForm(addedContact),)), { headers: { 'Content-Type': 'text/html' } })
         }
@@ -84,7 +93,7 @@ router
         return getRoot(query, headers, db, render, html)
     })
     .get('/:id', async ({ params, headers }, { db, render, html, }, event) => {
-        const contact = db.getContact(params.id)
+        const contact = await db.getContact(params.id)
         if (!contact || contact.length === 0) {
             return new Response(render(String, layout(html`<p>Contact not found</p>`)), { status: 404, headers: { 'Content-Type': 'text/html' } })
         } else if (headers.get('Hx-request')) {
@@ -94,14 +103,14 @@ router
         }
     })
     .delete('/:id', async ({ params }, { db, }, event) => {
-        const result = db.deleteContact(params.id)
+        const result = await db.deleteContact(params.id)
         if (result.status === 'error') {
             return new Response(result.message, { status: 500, headers: { 'Content-Type': 'text/html' } })
         }
         return new Response('', { status: 200, headers: { 'Content-Type': 'text/html' } })
     })
     .get('/:id/edit', async ({ headers, params }, { db, render, html, }, event) => {
-        const contact = db.getContact(params.id)
+        const contact = await db.getContact(params.id)
         if (!contact || contact.length === 0) {
             return new Response(render(String, layout(html`<p>Contact not found</p>`)), { headers: { 'Content-Type': 'text/html' } })
         } else if (headers.get('Hx-request')) {
@@ -119,11 +128,11 @@ router
         return getRoot(query, headers, db, render, html, true)
     })
     .post('/:id/archive', async ({ params, query, headers }, { db, render, html, }, event) => {
-        db.archiveContact(params.id,)
+        await db.archiveContact(params.id,)
         return getRoot(query, headers, db, render, html, true)
     })
     .delete('/:id/archive', async ({ params, query, headers }, { db, render, html, }, event) => {
-        db.deArchiveContact(params.id,)
+        await db.deArchiveContact(params.id,)
         return getRoot(query, headers, db, render, html, true)
     })
     .all('*', async (request) => {
