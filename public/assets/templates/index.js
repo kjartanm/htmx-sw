@@ -182,7 +182,7 @@ export const contactRows = (contacts, isArchive) => html`
                 ` : html`
                 <a class="ml-4 inline-block link link-info" role="menuitem" href="#"
                     hx-delete="/${contact.id}/archive"
-                    hx-confirm="Are you sure you want to de-archive this contact?"
+                    hx-confirm="Are you sure you want to restore this contact?"
                     hx-target="main"
                     hx-swap="innerHTML"
                 >
