@@ -39,16 +39,12 @@ const getRoot = async (query, headers, db, render, html, redirect = false) => {
 
 const router = AutoRouter({})
 router
-    .all('/assets/*', cacheFirst)
-    .all('/npm/*', cacheFirst)
-    .all('/version.js', async (request) => {
-        console.log('version.js', request)
-        return fetch(request.clone())
-    })
-    .all('/worker.js', async (request) => {
-        return fetch(request.clone())
-    })
+    .get('/assets/*', cacheFirst)
+    .get('/npm/*', cacheFirst)
+    .get('/version.js', cacheFirst)
+    .get('/worker.js', cacheFirst)
     .get('/manifest.json', cacheFirst)
+    .get('/index.html', cacheFirst)
     .get('/icons/*', cacheFirst)
     .post('/mock', async ({ query, headers, }, { db, html, render, }, event) => {
         await db.batchInsertContacts(contactsMock)
@@ -56,7 +52,6 @@ router
     })
     .get('/download', async ({ }, { db }) => {
         const blob = await db.getDBAsArrayBuffer()
-        console.log('download', blob)
         return new Response(blob, {
             status: 200,
             headers: {

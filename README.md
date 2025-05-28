@@ -15,7 +15,7 @@ On the page for adding new contacts (available from the kebab menu upper right c
 
 This poc combines modern web technologies to create a contacts application that works offline:
 
-- **Progressive Web App (PWA)** - Installable on any device with full offline support (offline works so good, that I sometimes don't understand why changes does not show, only to realize that the dev server is not running 😅)
+- **Progressive Web App (PWA)** - Installable on any device with full offline support 
 - **HTMX** - For dynamic UI updates
 - **SQLite** - Client-side database storage through WASM (Web Assembly) and OPFS (Origin Private File System)
 - **Service Worker** - Handles routing and caching strategy
@@ -33,7 +33,7 @@ This poc combines modern web technologies to create a contacts application that 
 
 ## Architecture
 
-The application uses a minimal architecture (total download 1,1 Mb, including SQLite):
+The application uses a minimal architecture (total download 1,9 Mb, including SQLite):
 
 - **Service Worker**: Intercepts network requests and serves data and cached content using itty-router
 - **Client-side SQLite**: Stores contact data in the browser's origin private file system

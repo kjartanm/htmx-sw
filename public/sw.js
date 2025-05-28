@@ -4,6 +4,10 @@ import router from './assets/routes.js'
 import { cacheName } from "./version.js"
 
 const cacheAssets = [
+    '/index.html',
+    '/sw.js',
+    '/version.js',
+    '/worker.js',
     '/assets/db/sql-wasm.wasm',
     '/assets/db/sql-wasm.js',
     '/assets/db/initSqlite.js',
@@ -12,9 +16,9 @@ const cacheAssets = [
     '/assets/itty-router-5.0.18/index.js',
     '/assets/uhtml-ssr-0.9.1/es.js',
     '/icons/contact-logo.svg',
+    '/icons/menu.svg',
     '/manifest.json',
 ]
-
 
 const log = console.log
 const error = console.error
