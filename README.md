@@ -76,7 +76,7 @@ Any static site that can serve the content in `/public`.
 For example, in this repo the application can be deployed using [Wrangler](https://developers.cloudflare.com/workers/wrangler/), Cloudflare's command-line tool for Workers:
 
 ```bash
-wrangler deploy
+npx wrangler deploy
 ```
 
 A minimal Cloudflare Worker config for deploying static assets only can be found in `/wrangler.jsonc`.
