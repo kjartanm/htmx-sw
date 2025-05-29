@@ -1,4 +1,4 @@
-import { cacheName } from "../version.js"
+import { cacheName } from "../sw.js"
 
 const putInCache = async (request, response) => {
   const cache = await caches.open(cacheName);

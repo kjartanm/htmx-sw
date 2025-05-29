@@ -1,4 +1,5 @@
 import { html } from '../uhtml-ssr-0.9.1/es.js'
+import { cacheVersion } from '../../sw.js'
 
 export const layout = (content,) => html`<!DOCTYPE html>
 <html lang="en">
@@ -13,6 +14,29 @@ export const layout = (content,) => html`<!DOCTYPE html>
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" href="/icons/contact-logo.svg" type="image/svg+xml">
     <script>
+
+        navigator.serviceWorker.getRegistration().then((reg) => {
+            reg.addEventListener('updatefound', () => {
+                console.log('Service Worker update found');
+            })
+        })
+
+        const forceSWUpdate = async () => {
+            //Force update the service worker
+            swReg = await navigator.serviceWorker.getRegistration();
+            if (swReg && swReg.active) {
+                await swReg.update().catch((error) => {
+                    alert('Service Worker update failed:', error);  
+                })
+                console.log('Service Worker updated');
+                setTimeout(() => {
+                    //Reload the page after a short delay to ensure newly cached resources are applied
+                    location.reload();
+                    console.log('Page reloaded to apply new Service Worker and cache');
+                }, 1500);
+            }
+        }
+
         const fileWorker = new Worker('worker.js', {
             type: 'classic',
         })
@@ -80,6 +104,11 @@ export const layout = (content,) => html`<!DOCTYPE html>
                         Download SQLite-file
                     </a>
                 </li>
+                <li>
+                    <span class="align-middle link light:link-neutral" onclick="forceSWUpdate()">
+                        Cache version ${cacheVersion}, click to force update of SW.
+                    </span>
+                </li
             </ul>
         </details>
     </header>

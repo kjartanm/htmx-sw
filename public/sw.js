@@ -1,7 +1,13 @@
 import { html, render } from './assets/uhtml-ssr-0.9.1/es.js'
 import ContactDatabase from './assets/db/contacts.js';
 import router from './assets/routes.js'
-import { cacheName } from "./version.js"
+
+const cacheVersion = 'v2'
+const cacheName = `htmx-sw-${cacheVersion}`
+export {
+    cacheVersion,
+    cacheName,
+}
 
 const cacheAssets = [
     '/index.html',
@@ -38,6 +44,7 @@ self.addEventListener("install", (event) => {
                 error("Error caching resources:", err)
             })
     )
+    self.skipWaiting()
 })
 
 const deleteCache = async (key) => {

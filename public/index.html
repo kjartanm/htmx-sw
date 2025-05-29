@@ -12,8 +12,9 @@
     <link rel="icon" href="/icons/contact-logo.svg" type="image/svg+xml">
     <script type="module">
 
-        await navigator.serviceWorker.register('sw.js', {
+        await navigator.serviceWorker.register('/sw.js', {
             type: 'module',
+            scope: '/'
         })
         .then((registration) => {
             console.log('Service Worker registered from file');
