@@ -26,7 +26,7 @@ export const layout = (content,) => html`<!DOCTYPE html>
             swReg = await navigator.serviceWorker.getRegistration();
             if (swReg && swReg.active) {
                 await swReg.update().catch((error) => {
-                    alert('Service Worker update failed:', error);  
+                    alert('Service Worker update failed: ' + error);  
                 })
                 console.log('Service Worker updated');
                 setTimeout(() => {
