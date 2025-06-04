@@ -46,7 +46,7 @@ export const layout = (content,) => html`<!DOCTYPE html>
             if(event.data.type === 'error') {
                 alert('Error: ' + event.data.msg)
             } else {
-                console.log('Message from worker: ' + event.data)
+                console.log('Message from worker: ' + event.data.msg)
             }
         }
 

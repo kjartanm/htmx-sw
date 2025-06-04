@@ -2,7 +2,7 @@ import { html, render } from './assets/uhtml-ssr-0.9.1/es.js'
 import ContactDatabase from './assets/db/contacts.js';
 import router from './assets/routes.js'
 
-const cacheVersion = '2.0'
+const cacheVersion = '2.4'
 const cacheName = `htmx-sw-${cacheVersion}`
 export {
     cacheVersion,
@@ -11,6 +11,7 @@ export {
 
 const cacheAssets = [
     '/index.html',
+    '/manifest.json',
     '/sw.js',
     '/version.js',
     '/worker.js',
@@ -18,12 +19,14 @@ const cacheAssets = [
     '/assets/db/sql-wasm.js',
     '/assets/db/initSqlite.js',
     '/assets/db/contacts.js',
+    '/assets/caching.js',
     '/assets/htmx.org-1.9.12/dist/htmx.min.js',
     '/assets/itty-router-5.0.18/index.js',
+    '/assets/routes.js',
+    '/assets/templates/index.js',
     '/assets/uhtml-ssr-0.9.1/es.js',
     '/icons/contact-logo.svg',
     '/icons/menu.svg',
-    '/manifest.json',
 ]
 
 const log = console.log
@@ -61,9 +64,9 @@ const deleteOldCaches = async () => {
 
 self.addEventListener('activate', event => {
     event.waitUntil(async function () {
-        if (self.registration.navigationPreload) {
+        /*if (self.registration.navigationPreload) {
             await self.registration.navigationPreload.enable()
-        }
+        }*/
         await deleteOldCaches()
     }())
 })
