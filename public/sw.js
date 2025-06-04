@@ -2,7 +2,7 @@ import { html, render } from './assets/uhtml-ssr-0.9.1/es.js'
 import ContactDatabase from './assets/db/contacts.js';
 import router from './assets/routes.js'
 
-const cacheVersion = '2.4'
+const cacheVersion = '2.5'
 const cacheName = `htmx-sw-${cacheVersion}`
 export {
     cacheVersion,

@@ -20,10 +20,14 @@ const contactsMock = [
 
 const getRoot = async (query, headers, db, render, html, redirect = false) => {
     let contacts = []
-    if (query.q) {
-        contacts = await db.getContacts(query.q)
-    } else {
-        contacts = await db.getContacts()
+    try {
+        if (query.q) {
+            contacts = await db.getContacts(query.q)
+        } else {
+            contacts = await db.getContacts()
+        }
+    } catch (error) {
+        console.error('Error fetching contacts:', error)
     }
     const content = html`${search(query.q)} ${contactTable(contacts)}`
     if (headers.get('Hx-target') || headers.get('Hx-request')) {
@@ -69,7 +73,6 @@ router
         }
     })
     .get('/new', async ({ headers }, { render, }, event) => {
-        console.log('new', headers.get('Hx-request'))
         if (headers.get('Hx-request')) {
             return new Response(render(String, contactForm()), { headers: { 'Content-Type': 'text/html' } })
         } else {
